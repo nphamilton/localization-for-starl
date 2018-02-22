@@ -1,0 +1,7 @@
+square.wpt
+3 2
+Kinect 1 10 11
+bot1 minidrone r
+bot2 Phantom4 b
+Kinect 2 12 13
+bot3 Ghost2 g
