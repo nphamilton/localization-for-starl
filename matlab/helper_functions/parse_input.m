@@ -23,36 +23,36 @@ global bots
 global bot_lists
 global kinect_locations
 
-% Open the file
+%% Open the file
 f = fopen(fileName,'r');
 
-% Read the waypoint file name
+%% Read the waypoint file name
 firstline = fgets(f);
 C = textscan(firstline, '%s');
 waypoint_filename = string(C{1});
 
-% Read the number of kinects and robots
+%% Read the number of kinects and robots
 secondline = fgets(f);
 C = textscan(secondline,'%d %d');
 numBots = C{1};
 numKinects = C{2};
 
-% Initialize the array of bots
+%% Initialize the array of bots
 bots = Robot.empty(numBots,0);
 for i = 1:numBots
     bots(i) = Robot;
 end
 
-% Initialize the Kinect locations matrix
+%% Initialize the Kinect locations matrix
 kinect_locations = zeros(numKinects,2);
 
-% Initialize the bot lists
-bot_lists = strings(numKinects,1);        %FIX THIS STUPID ISSUE CAN'T INITIALIZE AN ARRAY OF STRINGS?!?!?!?!?!?!?!?!
+%% Initialize the bot lists
+bot_lists = strings(numKinects,1);
 list = "";
 botID_list = "";
 kinectID_list = "";
 
-% Parse through the file reading one line at a time
+%% Parse through the file reading one line at a time
 botNum = 1;
 kinectNum = 1;
 nextline = fgets(f);
@@ -98,8 +98,8 @@ while ischar(nextline)
     nextline = fgets(f);
 end
 
-% All of the bots have been read. Make sure the last list does not have a
-% trailing ',' 
+%% All of the bots have been read. Clean up the lists.
+% Make sure the last list does not have a trailing ',' 
 if strcmp(list,'') == 0
     bot_lists(kinectNum) = strip(list, 'right', ',');
 end
@@ -118,6 +118,7 @@ if strcmp(kinectID_list,',') == 0
     kinectID_list = strip(t, 'right', ',');
 end
 
+%% Close the file
 fclose(f);
 end
 

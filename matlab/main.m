@@ -105,7 +105,7 @@ end
 establish_boundaries(kinect_locations);
 
 %% Setup subscribers
-
+%**************************************************************************
 
 %% Display keyboard shortcuts
 disp('L - Launch robots');
@@ -130,11 +130,13 @@ while true
     % Read all of the kinect images ********************************
     
     % Check each robot's location information for potential boundary crossing
-    % and inform the appropriate Kinects of the incident(s)
+    % and inform the appropriate Kinects of the incident(s) **NEEDS FIXES**
     find_potential_crossings(bots, incomingPubs);
 
     % Find the robots in each image ************************************
-    
+    for i = 1:numKinects
+        track_robots(bot_lists(i),i); 
+    end
     % Update all the info??? ****************************************
     
     % Update the figure every 4 times

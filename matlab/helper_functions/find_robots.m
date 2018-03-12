@@ -4,7 +4,7 @@ function find_robots(botList, kinectNum)
 %
 % Purpose: Find all the bots in their initial positions and identify them
 
-% Declare global variables that will be used or defined
+%% Declare global variables that will be used or defined
 global MINIDRONE
 global CREATE2
 global ARDRONE
@@ -14,14 +14,12 @@ global MAVICPRO
 global PHANTOM3
 global PHANTOM4
 global bots
-global rgbImageName
-global depthImageName
 
-% turn the botList from a string to a listof integers
+%% turn the botList from a string to a listof integers
 specificList = str2num(char(botList));
 robot_count = length(specificList);
 
-% Determine the number of each type of robot present
+%% Determine the number of each type of robot present
 numDrones = 0;
 numCreates = 0;
 numARDrones = 0;
@@ -31,7 +29,7 @@ numMavicDrones = 0;
 numPhant3Drones = 0;
 numPhant4Drones = 0;
 for i = specificList
-    currentType = botArray(i).type;
+    currentType = bots(i).type;
     if currentType == MINIDRONE
         numDrones = numDrones + 1;
     elseif currentType == CREATE2
@@ -51,7 +49,13 @@ for i = specificList
     end
 end
 
-% Run findBots to find all the bots and then assign their names
+%% Create an empty list to store the robots that are found
+botArray = Robot.empty(robot_count,0);
+for i = 1:robot_count
+    botArray(i) = Robot;
+end
+
+%% Run findBots to find all the bots and then assign their names
 found = false;
 while ~found
     % This loop will repeat if the color matching does not work or not all
@@ -61,21 +65,22 @@ while ~found
     imgColor = imread(*************************************);
     imgDepth = imread(*************************************);
     % make this function modify botArray, instead of return so many things
-    [found, bots] = findBots(imgColor, imgDepth, numDrones, numCreates, ...
+    [found, botArray] = findBots(imgColor, imgDepth, numDrones, numCreates, ...
         numARDrones, num3DRDrones, numGhostDrones, numMavicDrones, ...
         numPhant3Drones, numPhant4Drones);
     end
 
-    % Match each robot found to it's designated name *****FIXES NEEDED*****
+    % Match each robot found to it's designated name
     numBotsUsed = 0;
     for i = specificList
         k = 1;
         while k < robot_count
-            if botArray(i).type == bots(k).type
-                if botArray(i).color == bots(k).color
+            if bots(i).type == botArray(k).type
+                if bots(i).color == botArray(k).color
                     % If the type and color match, then the robot name
                     % is given to that robot
-                    botArray(i) = bots(k);
+                    bots(i) = botArray(k);
+                    bots(i).kinectNum = kinectNum;
                     numBotsUsed = numBotsUsed + 1;
                     break;
                 else
