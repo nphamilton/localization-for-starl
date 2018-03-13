@@ -49,12 +49,6 @@ for i = specificList
     end
 end
 
-%% Create an empty list to store the robots that are found
-botArray = Robot.empty(robot_count,0);
-for i = 1:robot_count
-    botArray(i) = Robot;
-end
-
 %% Run findBots to find all the bots and then assign their names
 found = false;
 while ~found
