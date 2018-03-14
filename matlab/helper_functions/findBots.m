@@ -1,6 +1,6 @@
 function [found, bots] = findBots(imgColor, imgDepth, numDrones, numCreates, ...
         numARDrones, num3DRDrones, numGhostDrones, numMavicDrones, ...
-        numPhant3Drones, numPhant4Drones)
+        numPhant3Drones, numPhant4Drones, kinectLocation)
 % Author: Nathaniel Hamilton
 %  Email: nathaniel.p.hamilton@vanderbilt.edu
 %
@@ -102,7 +102,7 @@ if numBots - numCreates > 0
                 bots(i).type = GHOST2;
                 bots(i).BBox = getBBox(bots(i).center, bots(i).radius, GHOST2, BBoxFactor);
                 bots(i).color = getColor(imgColor, bots(i).center);
-                centerMM = getMMCoord(bots(i).center, bots(i).radius, bots(i).type);
+                centerMM = getMMCoord(kinectLocation, bots(i).center, bots(i).radius, bots(i).type);
                 bots(i).X = centerMM(1,1);
                 bots(i).Y = centerMM(1,2);
                 bots(i).Z = bots(i).depth - camDistToFloor;
@@ -180,7 +180,7 @@ if numBots - numCreates > 0
                 bots(i).type = ARDRONE;
                 bots(i).BBox = getBBox(bots(i).center, bots(i).radius, ARDRONE, BBoxFactor);
                 bots(i).color = getColor(imgColor, bots(i).center);
-                centerMM = getMMCoord(bots(i).center, bots(i).radius, bots(i).type);
+                centerMM = getMMCoord(kinectLocation, bots(i).center, bots(i).radius, bots(i).type);
                 bots(i).X = centerMM(1,1);
                 bots(i).Y = centerMM(1,2);
                 bots(i).Z = bots(i).depth - camDistToFloor;
@@ -261,7 +261,7 @@ if numBots - numCreates > 0
                 bots(i).BBox = getBBox(centers_sorted(index,:), radii_sorted(index), MINIDRONE, BBoxFactor);
                 bots(i).color = getColor(imgColor, centers_sorted(index,:));
                 bots(i).type = MINIDRONE;
-                centerMM = getMMCoord(bots(i).center, bots(i).radius, bots(i).type);
+                centerMM = getMMCoord(kinectLocation, bots(i).center, bots(i).radius, bots(i).type);
                 bots(i).X = centerMM(1,1);
                 bots(i).Y = centerMM(1,2);
                 bots(i).Z = bots(i).depth - camDistToFloor;
@@ -323,7 +323,7 @@ if numCreates > 0
         bots(i).BBox = getBBox(centers(index,:), radii(index), CREATE2, BBoxFactor);
         bots(i).color = getColor(imgColor, centers(index,:));
         bots(i).type = CREATE2;
-        centerMM = getMMCoord(bots(i).center, bots(i).radius, bots(i).type);
+        centerMM = getMMCoord(kinectLocation, bots(i).center, bots(i).radius, bots(i).type);
         bots(i).X = centerMM(1,1);
         bots(i).Y = centerMM(1,2);
         bots(i).Z = bots(i).depth - camDistToFloor;

@@ -135,9 +135,10 @@ while true
 
     % Find the robots in each image ************************************
     for i = 1:numKinects
-        track_robots(bot_lists(i),i); 
+        track_robots(bot_lists(i),i, imgColor(i), imgDepth(i)); 
     end
-    % Update all the info??? ****************************************
+    
+    % Update all the info and publish it??? ****************************************
     
     % Update the figure every 4 times
     if rem(frameCount,4) == 1

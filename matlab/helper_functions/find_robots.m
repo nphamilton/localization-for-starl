@@ -14,6 +14,7 @@ global MAVICPRO
 global PHANTOM3
 global PHANTOM4
 global bots
+global kinect_locations
 
 %% turn the botList from a string to a listof integers
 specificList = str2num(char(botList));
@@ -61,7 +62,7 @@ while ~found
     % make this function modify botArray, instead of return so many things
     [found, botArray] = findBots(imgColor, imgDepth, numDrones, numCreates, ...
         numARDrones, num3DRDrones, numGhostDrones, numMavicDrones, ...
-        numPhant3Drones, numPhant4Drones);
+        numPhant3Drones, numPhant4Drones, kinect_locations(kinectNum,:));
     end
 
     % Match each robot found to it's designated name
