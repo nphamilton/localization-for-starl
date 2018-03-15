@@ -130,12 +130,15 @@ while true
     % Read all of the kinect images ********************************
     
     % Check each robot's location information for potential boundary crossing
-    % and inform the appropriate Kinects of the incident(s) **NEEDS FIXES**
+    % and inform update Kinect lists
     find_potential_crossings(bots, incomingPubs);
 
     % Find the robots in each image ************************************
     for i = 1:numKinects
-        track_robots(bot_lists(i),i, imgColor(i), imgDepth(i)); 
+        track_robots(bot_lists(i),i, imgColor(i), imgDepth(i));
+        if strcmp(incomingList(i),'') == 0
+            check_incoming(incomingList(i), imgColor(i), imgDepth(i));
+        end
     end
     
     % Update all the info and publish it??? ****************************************
