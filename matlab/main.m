@@ -27,7 +27,6 @@ global frameCount;
 global imgColorAll;
 global mm_per_pixel;
 global camDistToFloor;
-global botArray;
 global BBoxFactor;
 global hysteresis;
 global numKinects
@@ -129,19 +128,20 @@ while true
     
     % Read all of the kinect images ********************************
     
-    % Check each robot's location information for potential boundary crossing
-    % and inform update Kinect lists
-    find_potential_crossings(bots, incomingPubs);
-
-    % Find the robots in each image ************************************
+    % Find the robots in each image
     for i = 1:numKinects
         track_robots(bot_lists(i),i, imgColor(i), imgDepth(i));
-        if strcmp(incomingList(i),'') == 0
-            check_incoming(incomingList(i), imgColor(i), imgDepth(i));
-        end
     end
     
-    % Update all the info and publish it??? ****************************************
+    % Check each robot's location information for boundary crossing
+    incomingList = find_crossings(bots);
+    
+    % Try to find the bots that crossed boundaries
+    for i = 1:numKinects
+        if strcmp(incomingList(i),'') == 0
+            check_incoming(incomingList(i), i, imgColor(i), imgDepth(i));
+        end
+    end
     
     % Update the figure every 4 times
     if rem(frameCount,4) == 1
@@ -154,10 +154,6 @@ while true
     if get(fig,'currentkey') == 'x'
         disp('Exiting...');
         close all;
-        % Send the shutdown command
-        msg = rosmessage('std_msgs/Byte');
-		msg.Data = 0;
-		send(shutdownPub,msg);
         shutdown_track = 0;
         judp('SEND',4000,IP,int8('ABORT'));
         break;
@@ -166,17 +162,18 @@ while true
     if get(fig,'currentkey') == 'q'
         disp('Exiting...');
         close all;
-        % Send the shutdown command
-        msg = rosmessage('std_msgs/Byte');
-		msg.Data = 0;
-		send(shutdownPub,msg);
         shutdown_track = 1;
         judp('SEND',4000,IP,int8('ABORT'));
         break;
     end
 
-    % If the window command indicates to send waypoints, send them
-    if USE_SERVER == 1       
+    if USE_SERVER == 1 
+        % Send positions to all connected nodes
+        if ((toc > TX_PERIOD && send_launch ~= 1))
+            server_send_robots(bots);
+            tic;
+        end
+        
         % Send waypoints and robot positions
          if(waypoints_transmitted == 0)
              waypoints_transmitted = 1;
