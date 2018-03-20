@@ -25,6 +25,8 @@ global camDistToFloor;
 global BBoxFactor;
 global frameCount;
 global imgColorAll;
+global imgColor;
+global imgDepth;
 global mm_per_pixel;
 global camDistToFloor;
 global BBoxFactor;
@@ -56,12 +58,14 @@ clear_history = 0;
 waypoints_transmitted = 0;
 send_launch = 0;
 
+
 %% Define values for the settings variables. THESE CAN BE CHANGED
 BBoxFactor = 1.7; % intentionally large because it is used for searching for drones not found in previous locations
 hysteresis = 10;
 camDistToFloor = 3058; % in mm, as measured with Kinect
 mm_per_pixel = 5.663295322; % mm in one pixel at ground level
 IP = '10.255.24.255';
+num_frames = 10000;
 USE_SERVER = 1; %Enable/disable the network server
 USE_WPT = 1;    %Enable/disable loading waypoints and walls
 USE_HISTORY = 1;%Enable/disable history
@@ -80,6 +84,13 @@ HISTORY_SIZE = 2500; %number of points in each history for drawing
 SAVE_TO_FILE = false;
 OUTPUT_FILENAME = 'C:\data.xml';
 
+% image variables 480x640 is the resolution of the kinect change if
+% necessary
+imgColor = zeros(480,640,3,numKinects,'uint8');
+imgDepth = zeros(480,640,3,numKinects,'uint8');
+imgColorAll = zeros(480,640,3,numKinects,num_frames,'uint8');
+frameCount = 1;
+
 %% Setup the figure and save file
 % Setup the figure
 fig = figure('KeyPressFcn',@fig_key_handler);
@@ -94,8 +105,10 @@ end
 [botID_list, kinectID_list, WPT_FILENAME] = parse_input(BOTLIST_FILENAME);
 
 % Compare input to available nodes and cancel if not all are there
-% ****************************************************************** 
-% **********************************************
+found = false;
+while ~found
+   [found, kinectTags] = verify_kinects_present(kinectID_list); 
+end
 
 % Load the walls and waypoints (if required)
 [walls, waypoints] = load_wpt(WPT_FILENAME, USE_WPT);
@@ -104,7 +117,14 @@ end
 establish_boundaries(kinect_locations);
 
 %% Setup subscribers
-%**************************************************************************
+imgColorSubs = robotics.ros.Subscriber.empty(0,numKinects);
+imgDepthSubs = robotics.ros.Subscriber.empty(0,numKinects);
+for i = 1:numKinects
+    colorS = strcat(char(kinectTags(i)), 'imgColor');
+    depthS = strcat(char(kinectTags(i)), 'imgDepth');
+    imgColorSubs(i) = rossubscriber(colorS,'sensor_msgs/Image',{@colorImageCollectionCallback,i});
+    imgDepthSubs(i) = rossubscriber(depthS,'sensor_msgs/Image',{@depthImageCollectionCallback,i});
+end
 
 %% Display keyboard shortcuts
 disp('L - Launch robots');
@@ -126,7 +146,8 @@ frameCount = 0;
 while true
     frameCount = frameCount + 1;
     
-    % Read all of the kinect images ********************************
+    % Read all of the kinect images
+    read_all_kinect_images();
     
     % Find the robots in each image
     for i = 1:numKinects
