@@ -25,8 +25,8 @@ global camDistToFloor;
 global BBoxFactor;
 global frameCount;
 global imgColorAll;
-global imgColor;
-global imgDepth;
+global colorMsgs;
+global depthMsgs;
 global mm_per_pixel;
 global camDistToFloor;
 global BBoxFactor;
@@ -86,10 +86,9 @@ OUTPUT_FILENAME = 'C:\data.xml';
 
 % image variables 480x640 is the resolution of the kinect change if
 % necessary
-imgColor = zeros(480,640,3,numKinects,'uint8');
-imgDepth = zeros(480,640,3,numKinects,'uint8');
+% imgColor = zeros(480,640,3,numKinects,'uint8');
+% imgDepth = zeros(480,640,3,numKinects,'uint8');
 imgColorAll = zeros(480,640,3,numKinects,num_frames,'uint8');
-frameCount = 1;
 
 %% Setup the figure and save file
 % Setup the figure
@@ -104,10 +103,14 @@ end
 % Open the list and parse through it to create the botID_list
 [botID_list, kinectID_list, WPT_FILENAME] = parse_input(BOTLIST_FILENAME);
 
-% Compare input to available nodes and cancel if not all are there
+% Compare input to available nodes and do not proceed until all are
+% accounted for
 found = false;
 while ~found
    [found, kinectTags] = verify_kinects_present(kinectID_list); 
+   if ~found
+       disp('Not all of the Kinects are broadcasting. Trying again...')
+   end
 end
 
 % Load the walls and waypoints (if required)
@@ -122,6 +125,8 @@ imgDepthSubs = robotics.ros.Subscriber.empty(0,numKinects);
 for i = 1:numKinects
     colorS = strcat(char(kinectTags(i)), 'imgColor');
     depthS = strcat(char(kinectTags(i)), 'imgDepth');
+    colorMsgs(i) = rosmessage('sensor_msgs/Image');
+    depthMsgs(i) = rosmessage('sensor_msgs/Image');
     imgColorSubs(i) = rossubscriber(colorS,'sensor_msgs/Image',{@colorImageCollectionCallback,i});
     imgDepthSubs(i) = rossubscriber(depthS,'sensor_msgs/Image',{@depthImageCollectionCallback,i});
 end
@@ -147,7 +152,7 @@ while true
     frameCount = frameCount + 1;
     
     % Read all of the kinect images
-    read_all_kinect_images();
+    [imgColor, imgDepth] = read_all_kinect_images();
     
     % Find the robots in each image
     for i = 1:numKinects
@@ -157,7 +162,7 @@ while true
     % Check each robot's location information for boundary crossing
     incomingList = find_crossings(bots);
     
-    % Try to find the bots that crossed boundaries
+    % Try to find the bots that crossed boundaries or were not found
     for i = 1:numKinects
         if strcmp(incomingList(i),'') == 0
             check_incoming(incomingList(i), i, imgColor(i), imgDepth(i));

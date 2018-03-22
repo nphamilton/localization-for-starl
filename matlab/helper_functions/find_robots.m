@@ -15,6 +15,9 @@ global PHANTOM3
 global PHANTOM4
 global bots
 global kinect_locations
+global kinect_number
+global colorMsgs
+global depthMsgs
 
 %% turn the botList from a string to a listof integers
 specificList = str2num(char(botList));
@@ -57,8 +60,10 @@ while ~found
     % of the robots are identified
     while ~found
     % Get the corresponding Kinect images
-    imgColor = imread(*************************************);
-    imgDepth = imread(*************************************);
+    kinect_number = kinectNum;
+    imgColor = readImage(colorMsgs(kinectNum));
+    imgDepth = readImage(depthMsgs(kinectNum));
+    kinect_number = 0;
     % make this function modify botArray, instead of return so many things
     [found, botArray] = findBots(imgColor, imgDepth, numDrones, numCreates, ...
         numARDrones, num3DRDrones, numGhostDrones, numMavicDrones, ...
