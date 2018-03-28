@@ -1,3 +1,5 @@
+
+
 /*
  * cameraParser.cpp
  * Author: Nate Hamilton
@@ -7,7 +9,7 @@
  * Purpose:
  *
  * Note: This file is a modification of the Protonect.cpp file found at
- * 	 http://www.openkinect.org for use with libfreenect2
+ * http://www.openkinect.org for use with libfreenect2
  */
 
 #include <iostream>
@@ -64,9 +66,9 @@ int main(int argc, char** argv)
 {
 
 /// [gather specifications]
-  char[] kinectID = "kinect1";
-  char[] rgbPubName = "imgColor";
-  char[] depthPubName = "imgDepth";
+  char kinectID[] = "kinect1";
+  char rgbPubName[] = "kinect1/imgColor";
+  char depthPubName[] = "kinect1/imgDepth";
 
 
 /// [context]
@@ -169,7 +171,7 @@ int main(int argc, char** argv)
 //  system(command3);  
 
 /// [loop start]
-  while(!cameraParser_shutdown)
+  while(ros::ok())
   {
     if (!listener.waitForNewFrame(frames, 10*1000)) // 10 seconds
     {
@@ -184,7 +186,6 @@ int main(int argc, char** argv)
 /// [registration]
       registration->apply(rgb, depth, &undistorted, &registered);
 /// [registration]
-	
     cv::Mat rgbMat = cv::Mat(rgb->height, rgb->width, CV_8UC4, rgb->data);
     cv::Mat irMat = cv::Mat(ir->height, ir->width, CV_32FC1, ir->data);
     cv::Mat depthMat = cv::Mat(depth->height, depth->width, CV_32FC1, depth->data);
@@ -196,20 +197,19 @@ int main(int argc, char** argv)
 //    cv::Mat registeredInvMat = cv::Mat(registeredInv.height, registeredInv.width, CV_32FC1, registeredInv.data);    
 
 /// [publish the images]
-    sensor_msgs::ImagePtr rbgMsg = cv_bridge::CvImage(std_msgs::Header(), "rgb8", rgbMat).toImageMsg();
-	sensor_msgs::ImagePtr depthMsg = cv_bridge::CvImage(std_msgs::Header(), "rgb8", depthMat).toImageMsg();
-	rgbPub.publish(rgbMsg);
-	depthPub.publish(depthMsg);
+    sensor_msgs::ImagePtr rgbMsg = cv_bridge::CvImage(std_msgs::Header(), "rgb8", rgbMat).toImageMsg();
+sensor_msgs::ImagePtr depthMsg = cv_bridge::CvImage(std_msgs::Header(), "rgb8", depthMat).toImageMsg();
+rgbPub.publish(rgbMsg);
+depthPub.publish(depthMsg);
 
 //  This code is from a different version
 //  char rgbName [50];
-//	char depthName [50];
-//	sprintf(rgbName, "%s/image%06u.jpg",rgbDir,framecount);
-//	sprintf(depthName, "%s/image%06u.jpg",depthDir,framecount);
-//	cv::imwrite(rgbName, rgbMat);
+// char depthName [50];
+// sprintf(rgbName, "%s/image%06u.jpg",rgbDir,framecount);
+// sprintf(depthName, "%s/image%06u.jpg",depthDir,framecount);
+// cv::imwrite(rgbName, rgbMat);
 //  cv::imwrite(depthName, depthMat);
-	
-	framecount++;
+framecount++;
 
 /// [loop end]
     listener.release(frames);
@@ -239,3 +239,6 @@ void delay(unsigned int sec) {
     ticks2 = clock()*1000;
   }
 }
+
+
+
