@@ -3,8 +3,8 @@ all install:
 	sudo ./essentials_setup.bash
 	sudo ./ros_setup.bash
 	sudo ./opencv_setup.bash
-	sudo ./kinect_setup.bash
 	sudo ./libfreenect2_setup.bash
+	sudo ./kinect_setup.bash
 
 essentials:
 	chmod +x essentials_setup.bash ros_setup.bash opencv_setup.bash kinect_setup.bash libfreenect2_setup.bash

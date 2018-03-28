@@ -33,6 +33,6 @@ echo -e "\e[1;32m 14 of 16: installing the build...\e[0m"
 sudo make install
 echo -e "\e[1;32m 15 of 16: copying rule files...\e[0m"
 sudo cp ~/libfreenect2/platform/linux/udev/90-kinect2.rules /etc/udev/rules.d/
-echo -e "\e[1;32m 16 of 16: opening the kinect view to prove it works...\e[0m"
-sudo ./bin/Protonect
+echo -e "\e[1;32m 16 of 16: navigating back...\e[0m"
+cd ~/minnowBoardSetup
 
