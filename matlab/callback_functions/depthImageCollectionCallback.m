@@ -13,7 +13,7 @@ global depthMsgs
 % should not be copied because it is either not needed or it could
 % overwrite what is already being read
 if kinect_number > kinectNum
-    depthMsgs(kinectNum) = msg.Data;
+    depthMsgs(kinectNum) = msg;
 end
 
 end

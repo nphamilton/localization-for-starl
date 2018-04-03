@@ -14,7 +14,7 @@ function [ ground_boundaries air_boundaries ] = establish_boundaries( kinectLoca
 xRadius = 318/2;
 yRadius = 234/2;
 
-[p,numKinects] = size(kinectLocations); % The ans might need to be flipped
+[numKinects,p] = size(kinectLocations); % The ans might need to be flipped
 bounds = zeros(numKinects,4);
 
 for i = 1:numKinects

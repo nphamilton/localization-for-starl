@@ -32,7 +32,7 @@ for i = 1:numKinects
     TF = contains(topics,kinectTags(i));
     % If there are 2 instances of the tag, then there are 2 associated
     % topics and we can count it as present
-    if sum(TF) == 2
+    if sum(TF) >= 2
        numFound = numFound + 1;
     else
         fprintf('Missing %s\n',kinectTags(i));

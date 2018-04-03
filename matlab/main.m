@@ -6,6 +6,7 @@
 % Purpose:
 %
 close all;
+clear all;
 format longg;
 
 load('run_number.mat')
@@ -25,8 +26,8 @@ global camDistToFloor;
 global BBoxFactor;
 global frameCount;
 global imgColorAll;
-global colorMsgs;
-global depthMsgs;
+global colorMsgs
+global depthMsgs
 global mm_per_pixel;
 global camDistToFloor;
 global BBoxFactor;
@@ -125,8 +126,8 @@ imgDepthSubs = robotics.ros.Subscriber.empty(0,numKinects);
 for i = 1:numKinects
     colorS = strcat(char(kinectTags(i)), 'imgColor');
     depthS = strcat(char(kinectTags(i)), 'imgDepth');
-    colorMsgs(i) = rosmessage('sensor_msgs/Image');
-    depthMsgs(i) = rosmessage('sensor_msgs/Image');
+    colorMsgs = [colorMsgs rosmessage('sensor_msgs/Image')];
+    depthMsgs = [depthMsgs rosmessage('sensor_msgs/Image')];
     imgColorSubs(i) = rossubscriber(colorS,'sensor_msgs/Image',{@colorImageCollectionCallback,i});
     imgDepthSubs(i) = rossubscriber(depthS,'sensor_msgs/Image',{@depthImageCollectionCallback,i});
 end
@@ -228,7 +229,7 @@ while true
 end
 
 %% Upon exit...
-
+save('run_number.mat', 'run_number');
 
 
 

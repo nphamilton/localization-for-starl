@@ -13,7 +13,7 @@ global colorMsgs
 % should not be copied because it is either not needed or it could
 % overwrite what is already being read
 if kinect_number > kinectNum
-    colorMsgs(kinectNum) = msg.Data;
+    colorMsgs(kinectNum) = msg;
 end
 
 end
