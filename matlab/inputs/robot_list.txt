@@ -1,6 +1,5 @@
 square.wpt
-2 2
+2 1
 Kinect 1 10 11
 bot1 minidrone r
 bot2 Phantom4 b
-Kinect 2 20 50

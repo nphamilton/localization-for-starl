@@ -9,11 +9,13 @@ global kinect_number
 global colorMsgs
 
 %% Collect the message
-% If kinect_number is less than or equal to the kinectNum, then the message
+% If kinect_number is greater than or equal to the kinectNum, then the message
 % should not be copied because it is either not needed or it could
 % overwrite what is already being read
-if kinect_number > kinectNum
+%disp('I am trying...')
+if kinect_number < kinectNum
     colorMsgs(kinectNum) = msg;
+    %disp('I Read an Image!!!!!')
 end
 
 end

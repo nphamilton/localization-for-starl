@@ -63,6 +63,7 @@ while ~found
     kinect_number = kinectNum;
     imgColor = readImage(colorMsgs(kinectNum));
     imgDepth = readImage(depthMsgs(kinectNum));
+    %disp('Read the images')
     kinect_number = 0;
     % make this function modify botArray, instead of return so many things
     [found, botArray] = findBots(imgColor, imgDepth, numDrones, numCreates, ...

@@ -24,8 +24,8 @@ numBots = numCreates + numDrones + numARDrones + num3DRDrones + numGhostDrones +
 % Robots with smallest search circles are found first
 
 %% Create an empty list to store the robots that are found
-bots = Robot.empty(robot_count,0);
-for i = 1:robot_count
+bots = Robot.empty(numBots,0);
+for i = 1:numBots
     bots(i) = Robot;
 end
 

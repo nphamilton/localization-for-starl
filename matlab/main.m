@@ -25,6 +25,7 @@ global kinect_locations;
 global camDistToFloor;
 global BBoxFactor;
 global frameCount;
+global kinect_number;
 global imgColorAll;
 global colorMsgs
 global depthMsgs
@@ -90,6 +91,7 @@ OUTPUT_FILENAME = 'C:\data.xml';
 % imgColor = zeros(480,640,3,numKinects,'uint8');
 % imgDepth = zeros(480,640,3,numKinects,'uint8');
 imgColorAll = zeros(480,640,3,numKinects,num_frames,'uint8');
+kinect_number = 0;
 
 %% Setup the figure and save file
 % Setup the figure
@@ -131,7 +133,7 @@ for i = 1:numKinects
     imgColorSubs(i) = rossubscriber(colorS,'sensor_msgs/Image',{@colorImageCollectionCallback,i});
     imgDepthSubs(i) = rossubscriber(depthS,'sensor_msgs/Image',{@depthImageCollectionCallback,i});
 end
-
+pause(1);
 %% Display keyboard shortcuts
 disp('L - Launch robots');
 disp('A - Abort all');
