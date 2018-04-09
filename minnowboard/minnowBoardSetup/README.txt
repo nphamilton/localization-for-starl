@@ -11,7 +11,7 @@ Contact info: nathaniel.p.hamilton@vanderbilt.edu
 1. Move the whole minnowBoardSetup folder to the home directory
 
 2. Run the install scripts as root
-	Open terminal and navigate to the home directory then run the command:
+	Open terminal and navigate to the minnowBoardSetup directory then run the command:
 	
 	sudo make all
 	
@@ -40,9 +40,9 @@ Contact info: nathaniel.p.hamilton@vanderbilt.edu
 ================================================================================
 				Other Commands
 ================================================================================	
-For your convenience, if an error occurs at any point, I have included a way to 
-install only certain sections. For example, if an error occurs while installing 
-libfreenect2, you can attempt the process again using the following command:
+For your convenience, if an error occurs at any point, I have included a way to  install only certain sections. 
+For example, if an error occurs while installing libfreenect2, you can attempt the process again using the 
+following command:
 
 	make libfreenect2
 

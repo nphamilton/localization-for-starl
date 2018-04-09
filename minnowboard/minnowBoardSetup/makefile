@@ -36,7 +36,6 @@ ros:
 
 clean:
 	chmod -x essentials_setup.bash ros_setup.bash opencv_setup.bash libfreenect2_setup.bash kinect_setup.bash
-	sudo rm -r build
 
 play:	
 	sudo ~/libfreenect2/build/bin/Protonect
