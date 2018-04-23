@@ -12,9 +12,9 @@ global colorMsgs
 global depthMsgs
 global imgColorAll
 
-%% Initialize variables
-imgColor = zeros(480,640,3,numKinects,'uint8');
-imgDepth = zeros(480,640,3,numKinects,'uint8');
+% %% Initialize variables
+% imgColor = zeros(480,640,3,numKinects,'uint8');
+% imgDepth = zeros(480,640,3,numKinects,'uint8');
 
 %% Read the images
 % Set the kinect_number to 1 so the associated callback function won't try
