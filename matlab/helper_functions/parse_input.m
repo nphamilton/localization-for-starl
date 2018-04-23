@@ -44,7 +44,7 @@ for i = 1:numBots
 end
 
 %% Initialize the Kinect locations matrix
-kinect_locations = zeros(numKinects,2);
+kinect_locations = zeros(numKinects,3);
 
 %% Initialize the bot lists
 bot_lists = strings(numKinects,1);
@@ -61,7 +61,7 @@ while ischar(nextline)
         if strcmp(nextline(1:6),'Kinect') == 1 || strcmp(nextline(1:6), 'kinect') == 1
             % If the line is for declaring the next Kinect number, update
             % the Kinect number
-            C = textscan(nextline,'%s %d %d %d');
+            C = textscan(nextline,'%s %d %d %d %d');
             
             % But first, clean up the previous Kinect's bot list by
             % removing the last comma
@@ -74,7 +74,8 @@ while ischar(nextline)
             kinectNum = C{2};
             kinect_locations(kinectNum,1) = C{3};
             kinect_locations(kinectNum,2) = C{4};
-            kinectID_list = strcat(kinectID_list, num2str(C{2}), ':', num2str(C{3}), ':', num2str(C{4}), ',');
+            kinect_locations(kinectNum,3) = C{5};
+            kinectID_list = strcat(kinectID_list, num2str(C{2}), ':', num2str(C{3}), ':', num2str(C{4}), ':', num2str(C{5}), ',');
             
         else
             % Otherwise the line is for declaring a robot

@@ -5,7 +5,6 @@ function [center, radius] = getPixelCoord(kinectNum, botNum, X, Y, Z)
 % Purpose: To convert X, Y, Z coordinates to their corresponding pixel
 % locations. It works as a reverse of getMMCoord.
 global mm_per_pixel
-global invertedCamera
 global kinect_locations
 global bots
 global camDistToFloor
@@ -29,10 +28,6 @@ depth = camDistToFloor - Z;
 radius = (rmin + rmax)/2;
 
 %% Calculate the pixel location based on the MM location
-if invertedCamera == 1
-    center(1,1) = ((Y - yCenterMM)/mm_per_pixel) + yCenterPx;
-    center(1,2) = ((X - xCenterMM)/mm_per_pixel) + xCenterPx;
-else
-    center(1,1) = ((X - xCenterMM)/mm_per_pixel) + xCenterPx;
-    center(1,2) = ((Y - yCenterMM)/mm_per_pixel) + yCenterPx;
+center(1,1) = ((X - xCenterMM)/mm_per_pixel) + xCenterPx;
+center(1,2) = ((Y - yCenterMM)/mm_per_pixel) + yCenterPx;
 end

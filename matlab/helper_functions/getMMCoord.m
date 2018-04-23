@@ -5,7 +5,6 @@ function out = getMMCoord(kinectLocation, coordinates, radius, type)
 % Purpose: This function converts location from pixel coordinates to mm 
 % coordinates
 global mm_per_pixel
-global invertedCamera
 
 %% Gather relevant information
 % these are the center pixel values of the image. If using a camera with
@@ -31,11 +30,6 @@ elseif isGroundRobot(type) == 1
 end
 
 %% Calculate the millimeter coordinate
-if invertedCamera == 1
-    out(1,1) = yCenterMM + (y - yCenterPx) * mmpp;
-    out(1,2) = xCenterMM + (x - xCenterPx) * mmpp;
-else
-    out(1,1) = xCenterMM + (x - xCenterPx) * mmpp;
-    out(1,2) = yCenterMM + (y - yCenterPx) * mmpp;
-end
+out(1,1) = xCenterMM + (x - xCenterPx) * mmpp;
+out(1,2) = yCenterMM + (y - yCenterPx) * mmpp;
 end

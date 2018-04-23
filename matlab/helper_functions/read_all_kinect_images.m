@@ -7,6 +7,7 @@ function [ imgColor, imgDepth ] = read_all_kinect_images( numKinects )
 
 %% Declare global variables
 global kinect_number
+global kinect_locations
 global colorMsgs
 global depthMsgs
 global imgColorAll
@@ -22,8 +23,8 @@ kinect_number = 1;
 
 while kinect_number <= numKinects
     % Read the next image
-    imgColor(kinect_number) = readImage(colorMsgs(kinect_number));
-    imgDepth(kinect_number) = readImage(depthMsgs(kinect_number));
+    imgColor(kinect_number) = imrotate(readImage(colorMsgs(kinect_number)),90*(kinect_locations(kinect_number,3)-1));
+    imgDepth(kinect_number) = imrotate(readImage(depthMsgs(kinect_number)),90*(kinect_locations(kinect_number,3)-1));
     imgColorAll(:,:,:,kinect_number,frameCount) = imgColor(kinect_number);
     % Increase the kinect_number so that the next image read is not
     % overwrtitten in its associated callback function
