@@ -65,7 +65,7 @@ send_launch = 0;
 BBoxFactor = 1.7; % intentionally large because it is used for searching for drones not found in previous locations
 hysteresis = 10;
 camDistToFloor = 3058; % in mm, as measured with Kinect
-mm_per_pixel = 5.663295322; % mm in one pixel at ground level
+mm_per_pixel = 135.416666666667; %5.663295322; % mm in one pixel at ground level
 IP = '10.255.24.255';
 num_frames = 10000;
 USE_SERVER = 1; %Enable/disable the network server
@@ -148,7 +148,7 @@ disp('Q - Track shutdown');
 for i = 1:numKinects
     find_robots(bot_lists(i),i); 
 end
-
+disp('I founded all dem bots')
 %% Track the robots and display their position in the figure
 frameCount = 0;
 while true
@@ -156,7 +156,7 @@ while true
     
     % Read all of the kinect images
     [imgColor, imgDepth] = read_all_kinect_images();
-    
+    disp('I done read all the images')
     % Find the robots in each image
     for i = 1:numKinects
         track_robots(bot_lists(i),i, imgColor(i), imgDepth(i));

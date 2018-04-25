@@ -63,14 +63,14 @@ while ~found
     kinect_number = kinectNum;
     imgColor = readImage(colorMsgs(kinectNum));
     imgDepth = readImage(depthMsgs(kinectNum));
-    %disp('Read the images')
+    disp('Read the images')
     kinect_number = 0;
     % make this function modify botArray, instead of return so many things
     [found, botArray] = findBots(imgColor, imgDepth, numDrones, numCreates, ...
         numARDrones, num3DRDrones, numGhostDrones, numMavicDrones, ...
         numPhant3Drones, numPhant4Drones, kinect_locations(kinectNum,:));
     end
-
+    disp('I think I found them all')
     % Match each robot found to it's designated name
     numBotsUsed = 0;
     for i = specificList

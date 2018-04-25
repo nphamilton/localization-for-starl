@@ -212,8 +212,11 @@ if numBots - numCreates > 0
     
     %% find minidrones
     if numDrones > 0
+        disp('I am looking for minidrones')
         % find the radius range
         [rmin, rmax] = findRadiusRange(depth, MINIDRONE);
+        rmin = 15;
+        rmax = 30;
         
         % find the circles
         [centers, radii, metrics] = imfindcircles(imgColor, [rmin,rmax], ...
@@ -223,14 +226,16 @@ if numBots - numCreates > 0
         % of minidrones then the function needs to try again
         if length(radii) < numDrones 
             found = false;
+            disp('Not enough circles found')
             return
         end
         
-%         figure();
-%         image(imgColor);
-%         hold on
-%         viscircles(centers, radii);
-%         hold off
+        figure();
+        image(imgColor);
+        hold on
+        viscircles(centers, radii);
+        hold off
+        
         % sort by size, the minidrone circles will be smaller
         [radii_sorted, I] = sort(radii);
         centers_sorted = [];
