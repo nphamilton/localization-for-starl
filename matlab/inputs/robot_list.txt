@@ -1,5 +1,5 @@
 square.wpt
 1 1
-Kinect 1 0 0 1
+Camera 1 0 0 1
 bot1 minidrone w
 

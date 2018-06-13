@@ -23,8 +23,8 @@ classdef Robot
         color
         type
         name
-        kinectNum
-        kinectNums = [];
+        cameraNum
+        cameraNums = [];
         hyst
     end
     

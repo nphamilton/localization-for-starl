@@ -21,20 +21,17 @@ global send_launch;
 global IP;
 global bots;
 global bot_lists;
-global kinect_locations;
-global camDistToFloor;
-global BBoxFactor;
+global camera_locations;
 global frameCount;
-global kinect_number;
+global camera_number;
 global imgColorAll;
 global colorMsgs
-global depthMsgs
 global mm_per_pixel;
 global camDistToFloor;
 global BBoxFactor;
 global hysteresis;
-global numKinects
-global numBots
+global numCameras;
+global numBots;
 global MINIDRONE;
 global CREATE2;
 global ARDRONE;
@@ -64,8 +61,8 @@ send_launch = 0;
 %% Define values for the settings variables. THESE CAN BE CHANGED
 BBoxFactor = 1.7; % intentionally large because it is used for searching for drones not found in previous locations
 hysteresis = 10;
-camDistToFloor = 3058; % in mm, as measured with Kinect
-mm_per_pixel = 135.416666666667; %5.663295322; % mm in one pixel at ground level
+camDistToFloor = 3058; % in mm, as measured with Camera
+mm_per_pixel = 2.5; % mm in one pixel at ground level
 IP = '10.255.24.255';
 num_frames = 10000;
 USE_SERVER = 1; %Enable/disable the network server
@@ -86,12 +83,9 @@ HISTORY_SIZE = 2500; %number of points in each history for drawing
 SAVE_TO_FILE = false;
 OUTPUT_FILENAME = 'C:\data.xml';
 
-% image variables 480x640 is the resolution of the kinect change if
-% necessary
-% imgColor = zeros(480,640,3,numKinects,'uint8');
-% imgDepth = zeros(480,640,3,numKinects,'uint8');
-imgColorAll = zeros(480,640,3,numKinects,num_frames,'uint8');
-kinect_number = 0;
+% image variables should default to the largets resolution available
+imgColorAll = zeros(480,640,3,numCameras,num_frames,'uint8'); % FIX THIS !!!
+camera_number = 0;
 
 %% Setup the figure and save file
 % Setup the figure
@@ -104,36 +98,33 @@ end
 
 %% Parse the input and process it
 % Open the list and parse through it to create the botID_list
-[botID_list, kinectID_list, WPT_FILENAME] = parse_input(BOTLIST_FILENAME);
+[botID_list, cameraID_list, WPT_FILENAME] = parse_input(BOTLIST_FILENAME);
 
 % Compare input to available nodes and do not proceed until all are
 % accounted for
 found = false;
 while ~found
-   [found, kinectTags] = verify_kinects_present(kinectID_list); 
+   [found, cameraTags] = verify_cameras_present(cameraID_list); 
    if ~found
-       disp('Not all of the Kinects are broadcasting. Trying again...')
+       disp('Not all of the cameras are broadcasting. Trying again...')
    end
 end
 
 % Load the walls and waypoints (if required)
 [walls, waypoints] = load_wpt(WPT_FILENAME, USE_WPT);
 
-% Establish boundaries for each Kinect node
-establish_boundaries(kinect_locations);
+% Establish boundaries for each Camera node
+establish_boundaries(camera_locations);
 
 %% Setup subscribers
-imgColorSubs = robotics.ros.Subscriber.empty(0,numKinects);
-imgDepthSubs = robotics.ros.Subscriber.empty(0,numKinects);
-for i = 1:numKinects
-    colorS = strcat(char(kinectTags(i)), 'imgColor');
-    depthS = strcat(char(kinectTags(i)), 'imgDepth');
+imgColorSubs = robotics.ros.Subscriber.empty(0,numCameras);
+for i = 1:numCameras
+    colorS = strcat(char(cameraTags(i)), 'imgColor');
     colorMsgs = [colorMsgs rosmessage('sensor_msgs/Image')];
-    depthMsgs = [depthMsgs rosmessage('sensor_msgs/Image')];
     imgColorSubs(i) = rossubscriber(colorS,'sensor_msgs/Image',{@colorImageCollectionCallback,i});
-    imgDepthSubs(i) = rossubscriber(depthS,'sensor_msgs/Image',{@depthImageCollectionCallback,i});
 end
 pause(1);
+
 %% Display keyboard shortcuts
 disp('L - Launch robots');
 disp('A - Abort all');
@@ -145,7 +136,7 @@ disp('X - Exit');
 disp('Q - Track shutdown');
 
 %% Find all the robots in their initial positions on the ground
-for i = 1:numKinects
+for i = 1:numCameras
     find_robots(bot_lists(i),i); 
 end
 disp('I founded all dem bots')
@@ -154,21 +145,21 @@ frameCount = 0;
 while true
     frameCount = frameCount + 1;
     
-    % Read all of the kinect images
-    [imgColor, imgDepth] = read_all_kinect_images();
+    % Read all of the Camera images
+    imgColor = read_all_camera_images();
     disp('I done read all the images')
     % Find the robots in each image
-    for i = 1:numKinects
-        track_robots(bot_lists(i),i, imgColor(i), imgDepth(i));
+    for i = 1:numCameras
+        track_bots(bot_lists(i),i, imgColor(i));
     end
     
     % Check each robot's location information for boundary crossing
     incomingList = find_crossings(bots);
     
     % Try to find the bots that crossed boundaries or were not found
-    for i = 1:numKinects
+    for i = 1:numCameras
         if strcmp(incomingList(i),'') == 0
-            check_incoming(incomingList(i), i, imgColor(i), imgDepth(i));
+            check_incoming(incomingList(i), i, imgColor(i));
         end
     end
     

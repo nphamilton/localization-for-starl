@@ -1,4 +1,4 @@
-function track_bots(kinectNum, botList, imgColor, imgDepth)
+function track_bots(cameraNum, botList, imgColor)
 % Author: Nate Hamilton
 %  Email: nathaniel.p.hamilton@vanderbilt.edu
 %  
@@ -10,7 +10,7 @@ indeces = str2num(char(botList));
 
 %% For each index, track the corresponding bot in botArray
 for i = indeces
-    trackBots(imgColor, imgDepth, i, kinectNum);
+    trackBots(imgColor, i, cameraNum);
 end
 
 end

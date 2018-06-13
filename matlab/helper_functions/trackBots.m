@@ -1,4 +1,4 @@
-function trackBots(imgColor, imgDepth, index, kinectNum)
+function trackBots(imgColor, index, cameraNum)
 global bots
 global MINIDRONE
 global CREATE2
@@ -11,21 +11,21 @@ global PHANTOM4
 global camDistToFloor
 global hysteresis
 global BBoxFactor
-global kinect_locations
+global camera_locations
 
 %% Get pixels in bounding box of bot
-depthFrame = getPixelsInBB(imgDepth, bots(index).BBox);
 frame = getPixelsInBB(imgColor, bots(index).BBox);
-depth= 0;
+
+%% Define some variables that will be used later
 centers = [];
 radii = [];
 metrics = [];
+[sizeX, sizeY, sizeZ] = size(frame);
 
 %% Determine the radius of the circle that should be looked for and then find the corresponding circles
 if bots(index).type == MINIDRONE
-    % get depth and rmin, rmax
-    depth = findDepth(depthFrame);
-    [rmin, rmax] = findRadiusRange(depth, MINIDRONE);
+    % calculate rmin and rmax
+    [rmin, rmax] = findRadiusRange(sizeX, MINIDRONE);
     % find circles
     [centers, radii, metrics] = imfindcircles(frame, [rmin,rmax], ...
         'ObjectPolarity', 'dark', 'Sensitivity', 0.92);
@@ -36,8 +36,7 @@ elseif bots(index).type == CREATE2
     [centers, radii, metrics] = imfindcircles(frame, [rmin,rmax], ...
         'ObjectPolarity', 'dark', 'Sensitivity', 0.96);
 elseif bots(index).type == ARDRONE
-    depth = findDepth(depthFrame);
-    [rmin, rmax] = findRadiusRange(depth, ARDRONE);
+    [rmin, rmax] = findRadiusRange(sizeX, ARDRONE);
     % find circles
     [centers, radii, metrics] = imfindcircles(frame, [rmin,rmax], ...
         'ObjectPolarity', 'dark', 'Sensitivity', 0.92);
@@ -62,8 +61,7 @@ elseif bots(index).type == ARDRONE
         metrics = 1;
     end
 elseif bots(index).type == GHOST2
-    depth = findDepth(depthFrame);
-    [rmin, rmax] = findRadiusRange(depth, GHOST2);
+    [rmin, rmax] = findRadiusRange(sizeX, GHOST2);
     % find circles
     [centers, radii, metrics] = imfindcircles(frame, [rmin,rmax], ...
         'ObjectPolarity', 'dark', 'Sensitivity', 0.92);
@@ -135,7 +133,7 @@ bots(index).BBoxes = [bots(index).BBoxes; bots(index).BBox];
 
 % add depth found if drone, add dist to floor if create and find yaws
 if isAerialDrone(bots(index).type)
-    bots(index).depth = depth;
+    bots(index).depth = findDepth(bots(index).radius, bots(index).type);
     bots(index).yaw = findYaw(imgColor,  bots(index).BBox,...
         bots(index).yaw, bots(index).center, bots(index).radius, bots(index).type);
     %bots(index).yaw = 0;
@@ -149,11 +147,11 @@ end
 
 % add accumulated values
 bots(index).yaws = [bots(index).yaws, bots(index).yaw];
-bots(index).depths = [bots(index).depths, depth];
-bots(index).kinectNums = [bots(index).kinectNums, kinectNum];
+bots(index).depths = [bots(index).depths, bots(index).depth];
+bots(index).cameraNums = [bots(index).cameraNums, cameraNum];
 
 % Update X, Y, and Z coordinates
-centerMM = getMMCoord(kinect_locations(kinectNum,:), bots(index).center, bots(index).radius, bots(index).type);
+centerMM = getMMCoord(camera_locations(cameraNum,:), bots(index).center, bots(index).radius, bots(index).type);
 bots(index).X = centerMM(1,1);
 bots(index).Y = centerMM(1,2);
 bots(index).Z = bots(index).depth - camDistToFloor;

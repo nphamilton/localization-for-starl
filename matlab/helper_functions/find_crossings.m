@@ -2,16 +2,16 @@ function [ incomingList ] = find_crossings(bots)
 % Author: Nathaniel Hamilton
 %  Email: nathaniel.p.hamilton@vanderbilt.edu
 %
-% Purpose: Identify bots that might be about to cross from one Kinect's
+% Purpose: Identify bots that might be about to cross from one Camera's
 % field of view to another.
 
 %% Globals and variable initializations
-global kinect_locations;
+global camera_locations;
 global camDistToFloor;
-numKinects = length(kinect_locations);
+numCameras = length(camera_locations);
 
 % Reset the incoming lists to start fresh
-incomingList = strings(numKinects,1);
+incomingList = strings(numCameras,1);
 
 %% Parse through all of the bots
 % Check to see which ones have a hysteresis value greater than 1. 
@@ -19,39 +19,39 @@ incomingList = strings(numKinects,1);
 % boundary.
 for i = 1:length(bots)
     if bots(i).hyst > 1
-        % Calculate which two Kinects are the closest (one should be the
-        % Kinect it is currently assigned to)
+        % Calculate which two Cameras are the closest (one should be the
+        % Camera it is currently assigned to)
         x = bots(i).X;
         y = bots(i).Y;
         z = bots(i).Z;
         closestDist = 100000000;
-        closestKinect = 0;
+        closestCamera = 0;
         closestDist2 = 1000000000;
-        closestKinect2 = 0;
-        for j = 1:numKinects
-            kinectX = kinect_locations(i,1);
-            kinectY = kinect_locations(i,2);
-            kinectZ = camDistToFloor;
-            dist = sqrt((kinectX-x)^2 + (kinectY-y)^2 + (kinectZ-z)^2);
+        closestCamera2 = 0;
+        for j = 1:numCameras
+            cameraX = camera_locations(i,1);
+            cameraY = camera_locations(i,2);
+            cameraZ = camDistToFloor;
+            dist = sqrt((cameraX-x)^2 + (cameraY-y)^2 + (cameraZ-z)^2);
             if dist < closestDist2
                 if dist < closestDist
                     closestDist2 = closestDist;
-                    closestKinect2 = closestKinect;
+                    closestCamera2 = closestCamera;
                     closestDist = dist;
-                    closestKinect = i;
+                    closestCamera = i;
                 else
                     closestDist2 = dist;
-                    closestKinect2 = i;
+                    closestCamera2 = i;
                 end
             end
         end
         
-        % Add them to the list of each Kinect as described in the
+        % Add them to the list of each Camera as described in the
         % documentation
-        incomingList(closestKinect) = strcat(incomingList(closestKinect),...
+        incomingList(closestCamera) = strcat(incomingList(closestCamera),...
             num2str(i), ',');
-        if closestKinect2 > 0
-            incomingList(closestKinect2) = strcat(incomingList(closestKinect2),...
+        if closestCamera2 > 0
+            incomingList(closestCamera2) = strcat(incomingList(closestCamera2),...
                 num2str(i), ',');
         end
     end

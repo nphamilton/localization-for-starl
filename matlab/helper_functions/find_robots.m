@@ -1,4 +1,4 @@
-function find_robots(botList, kinectNum) 
+function find_robots(botList, cameraNum) 
 % Author: Nathaniel Hamilton
 %  Email: nathaniel.p.hamilton@vanderbilt.edu
 %
@@ -14,10 +14,9 @@ global MAVICPRO
 global PHANTOM3
 global PHANTOM4
 global bots
-global kinect_locations
-global kinect_number
+global camera_locations
+global camera_number
 global colorMsgs
-global depthMsgs
 
 %% turn the botList from a string to a listof integers
 specificList = str2num(char(botList));
@@ -59,16 +58,15 @@ while ~found
     % This loop will repeat if the color matching does not work or not all
     % of the robots are identified
     while ~found
-    % Get the corresponding Kinect images
-    kinect_number = kinectNum;
-    imgColor = readImage(colorMsgs(kinectNum));
-    imgDepth = readImage(depthMsgs(kinectNum));
+    % Get the corresponding Camera images
+    camera_number = cameraNum;
+    imgColor = readImage(colorMsgs(cameraNum));
     disp('Read the images')
-    kinect_number = 0;
+    camera_number = 0;
     % make this function modify botArray, instead of return so many things
-    [found, botArray] = findBots(imgColor, imgDepth, numDrones, numCreates, ...
+    [found, botArray] = findBots(imgColor, numDrones, numCreates, ...
         numARDrones, num3DRDrones, numGhostDrones, numMavicDrones, ...
-        numPhant3Drones, numPhant4Drones, kinect_locations(kinectNum,:));
+        numPhant3Drones, numPhant4Drones, camera_locations(cameraNum,:));
     end
     disp('I think I found them all')
     % Match each robot found to it's designated name
@@ -81,7 +79,7 @@ while ~found
                     % If the type and color match, then the robot name
                     % is given to that robot
                     bots(i) = botArray(k);
-                    bots(i).kinectNum = kinectNum;
+                    bots(i).cameraNum = cameraNum;
                     numBotsUsed = numBotsUsed + 1;
                     break;
                 else

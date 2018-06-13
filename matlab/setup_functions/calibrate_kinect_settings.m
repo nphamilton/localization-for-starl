@@ -28,17 +28,17 @@ PHANTOM4 = 107;
 % Basic Kinect Setup as used in **
 warning('off','images:imfindcircles:warnForSmallRadius')
 num_frames = 10000; % number of frames kinect will capture
-imgColorAll = zeros(480,640,3,num_frames,'uint8'); % stores all captured imgs
+%imgColorAll = zeros(480,640,3,num_frames,'uint8'); % stores all captured imgs
 BBoxFactor = 1.5;
 
 %set up the Kinect
 kinect_number = 0;
 colorS = strcat('/kinect1/', 'imgColor');
-depthS = strcat('/kinect1/', 'imgDepth');
+%depthS = strcat('/kinect1/', 'imgDepth');
 colorMsgs = rosmessage('sensor_msgs/Image');
-depthMsgs = rosmessage('sensor_msgs/Image');
+%depthMsgs = rosmessage('sensor_msgs/Image');
 imgColorSub = rossubscriber(colorS,'sensor_msgs/Image',{@colorImageCollectionCallback,1});
-imgDepthSub = rossubscriber(depthS,'sensor_msgs/Image',{@depthImageCollectionCallback,1});
+%imgDepthSub = rossubscriber(depthS,'sensor_msgs/Image',{@depthImageCollectionCallback,1});
 
 pause(3);
 
@@ -46,12 +46,12 @@ pause(3);
 %found are
 kinect_number = 1;
 imgColor = readImage(colorMsgs);
-imgDepth = readImage(depthMsgs);
+%imgDepth = readImage(depthMsgs);
 kinect_number = 0;
 
 % cont = input('Clear Kinect view and press enter to continue.');
 % TODO: FIGURE OUT THE VALUES!!!!
-mm_per_pixel = 5.663295322; % mm in one pixel at ground level
+mm_per_pixel = 2.5; %5.663295322; % mm in one pixel at ground level
 camDistToFloor = 3058; % in mm, as measured with Kinect
 
 type = MINIDRONE;
@@ -106,7 +106,7 @@ for i = 1:num_depths
         end
         kinect_number = 1;
         imgColor = readImage(colorMsgs);
-        imgDepth = readImage(depthMsgs);
+        %imgDepth = readImage(depthMsgs);
         kinect_number = 0;
         
         % Find all of the circle in the frame
@@ -127,18 +127,20 @@ for i = 1:num_depths
     % Calculate the bounded box for the robot at this level. It shouldn't
     % change because the robot shouldn't be moving.
     BBox = getBBox(mean(centers,1), mean(radii), type, BBoxFactor);
+    s = spfrintf('What is the current depth that you measured in mm? ');
+    avg_depths(i) = input(s);
     for j = 1:num_reads
         kinect_number = 1;
         imgColor = readImage(colorMsgs);
-        imgDepth = readImage(depthMsgs);
+        %imgDepth = readImage(depthMsgs);
         kinect_number = 0;
         
-        % Clip the frame to observe only the area around the robot
-        depthFrame = getPixelsInDepthBB(imgDepth, BBox);
-        frame = getPixelsInColorBB(imgColor, BBox);
-        
-        % Determine the depth of the robot and record it
-        measured_depths(i,j) = findDepth(depthFrame);
+%         % Clip the frame to observe only the area around the robot
+%         depthFrame = getPixelsInDepthBB(imgDepth, BBox);
+%         frame = getPixelsInColorBB(imgColor, BBox);
+%         
+%         % Determine the depth of the robot and record it
+%         measured_depths(i,j) = findDepth(depthFrame);
         
         % Find all the circles present in the frame
         [centers, radii, metrics] = imfindcircles(frame, [rmin,rmax], ...
@@ -158,7 +160,7 @@ for i = 1:num_depths
 end
 
 % Average the readings at each depth
-avg_depths = mean(measured_depths,2);
+%avg_depths = mean(measured_depths,2);
 avg_radii = mean(measured_radii,2);
 
 % Fit and plot the data across as many ranges as possible
