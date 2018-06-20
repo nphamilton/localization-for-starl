@@ -11,14 +11,13 @@ global PHANTOM3
 global PHANTOM4
 global BBoxFactor
 
-
 % If the drone is a single-circle drone
 if (type == MINIDRONE)
     % The maximum radius cannot be larger than half the width and the
     % shouldn't be smaller than half the last recorded value
-    maxRadius = BBoxWidth/2;
-    lastRadius = maxRadius/BBoxFactor;
-    minRadius = lastRadius/2;
+    maxRadius = ceil(BBoxWidth/2);
+    lastRadius = floor(maxRadius/BBoxFactor);
+    minRadius = round(lastRadius/2);
     
     rmin = minRadius;
     rmax = maxRadius;
@@ -27,9 +26,9 @@ if (type == MINIDRONE)
 elseif ((type == ARDRONE) || (type == GHOST2))
 	% The maximum radius cannot be larger than 1/4 tge width and shouldn't 
     % be smaller than half the last recorded value 
-    maxRadius = BBoxWidth/4;
-    lastRadius = maxRadius/BBoxFactor;
-    minRadius = lastRadius/2;
+    maxRadius = ceil(BBoxWidth/4);
+    lastRadius = floor(maxRadius/BBoxFactor);
+    minRadius = round(lastRadius/2);
     
     rmin = minRadius;
     rmax = maxRadius;

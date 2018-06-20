@@ -61,23 +61,30 @@ while ~found
     % Get the corresponding Camera images
     camera_number = cameraNum;
     imgColor = readImage(colorMsgs(cameraNum));
-    disp('Read the images')
+%     disp('Read the images')
     camera_number = 0;
     % make this function modify botArray, instead of return so many things
     [found, botArray] = findBots(imgColor, numDrones, numCreates, ...
         numARDrones, num3DRDrones, numGhostDrones, numMavicDrones, ...
         numPhant3Drones, numPhant4Drones, camera_locations(cameraNum,:));
     end
-    disp('I think I found them all')
+%     disp('I think I found them all')
     % Match each robot found to it's designated name
     numBotsUsed = 0;
+%     disp('going into the for loop')
     for i = specificList
+%         disp('in the for loop')
         k = 1;
-        while k < robot_count
+        while k <= robot_count
+%             disp('gonna try first if')
+%             disp(bots(i).type)
+%             disp(botArray(k).type)
             if bots(i).type == botArray(k).type
+%                 disp('first if')
                 if bots(i).color == botArray(k).color
                     % If the type and color match, then the robot name
                     % is given to that robot
+                    botArray(k).name = char(bots(i).name);
                     bots(i) = botArray(k);
                     bots(i).cameraNum = cameraNum;
                     numBotsUsed = numBotsUsed + 1;

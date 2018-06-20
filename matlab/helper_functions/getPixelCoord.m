@@ -1,11 +1,11 @@
-function [center, radius] = getPixelCoord(kinectNum, botNum, X, Y, Z)
+function [center, radius] = getPixelCoord(cameraNum, botNum, X, Y, Z)
 % Author: Nate Hamilton
 %  Email: nathaniel.p.hamilton@vanderbilt.edu
 %  
 % Purpose: To convert X, Y, Z coordinates to their corresponding pixel
 % locations. It works as a reverse of getMMCoord.
 global mm_per_pixel
-global kinect_locations
+global camera_locations
 global bots
 global camDistToFloor
 
@@ -18,8 +18,8 @@ global camDistToFloor
 xCenterPx = 0;
 yCenterPx = 0;
 
-xCenterMM = kinect_locations(kinectNum,1);
-yCenterMM = kinect_locations(kinectNum,2);
+xCenterMM = camera_locations(cameraNum,1);
+yCenterMM = camera_locations(cameraNum,2);
 
 %% Determine the type and depth in order to calulate an estimated radius
 type = bots(botNum).type;

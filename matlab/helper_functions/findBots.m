@@ -34,15 +34,11 @@ if numBots - numCreates > 0
     % The drones are searched for in the order:  ARDrone2.0, GhostDrone2.0,
     % minidrone, Phantom3, Phantom4, Mavic Pro
     
-    % the depth is made constant because all of the robots should be at ground
-    % level. The value is chosen to activate a special setting in
-    % findRadiusRange.m
-    depth = 4900;
     
     %% find GhostDrone2.0
     if numGhostDrones > 0
         % find the radius range
-        [rmin, rmax] = findRadiusRange(depth, GHOST2);
+        [rmin, rmax] = findRadiusRange(depth, GHOST2); %CHANGE THIS!!!
         
         % find the circles
         [centers, radii, metrics] = imfindcircles(imgColor, [rmin,rmax], ...
@@ -140,7 +136,7 @@ if numBots - numCreates > 0
     %% find ARDrone2.0
     if numARDrones > 0
         % find the radius range
-        [rmin, rmax] = findRadiusRange(depth, ARDRONE);
+        [rmin, rmax] = findRadiusRange(depth, ARDRONE); %CHANGE THIS!!!!!!!
         
         % find the circles
         [centers, radii, metrics] = imfindcircles(imgColor, [rmin,rmax], ...
@@ -213,10 +209,10 @@ if numBots - numCreates > 0
     %% find minidrones
     if numDrones > 0
         disp('I am looking for minidrones')
-        % find the radius range
-        [rmin, rmax] = findRadiusRange(depth, MINIDRONE);
-        rmin = 15;
-        rmax = 30;
+        % the average radius on the ground is 47.8 so use values right
+        % around that for min and max
+        rmin = 40;
+        rmax = 55;
         
         % find the circles
         [centers, radii, metrics] = imfindcircles(imgColor, [rmin,rmax], ...
@@ -230,11 +226,12 @@ if numBots - numCreates > 0
             return
         end
         
-        figure();
+        figure(2);
         image(imgColor);
         hold on
         viscircles(centers, radii);
         hold off
+        pause(1)
         
         % sort by size, the minidrone circles will be smaller
         [radii_sorted, I] = sort(radii);
@@ -247,9 +244,10 @@ if numBots - numCreates > 0
         % add the best matching circles to the bots as minidrones
         index = 1;
         i = 1 + numGhostDrones + numARDrones;
-        while index < length(radii_sorted) && i <= (numGhostDrones + numARDrones + numDrones)
+        while index <= length(radii_sorted) && i <= (numGhostDrones + numARDrones + numDrones)
             % make sure the circle hasn't been used for one of the previous
             % drones
+%             disp('Im in the while loop')
             j = 1;
             can_use = 1;
             while j <= numGhostDrones + numARDrones && numGhostDrones + numARDrones > 0
@@ -261,6 +259,7 @@ if numBots - numCreates > 0
                 j = j + 1;
             end
             if can_use ~= 0
+%                 disp('im in the if')
                 bots(i).center = centers_sorted(index,:);
                 bots(i).radius = radii_sorted(index);
                 bots(i).BBox = getBBox(centers_sorted(index,:), radii_sorted(index), MINIDRONE, BBoxFactor);

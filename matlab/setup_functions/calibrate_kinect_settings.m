@@ -5,7 +5,7 @@ global imgColorAll
 global mm_per_pixel
 global camDistToFloor
 global BBoxFactor
-global kinect_number
+global camera_number
 global colorMsgs
 global depthMsgs
 global MINIDRONE
@@ -32,9 +32,9 @@ num_frames = 10000; % number of frames kinect will capture
 BBoxFactor = 1.5;
 
 %set up the Kinect
-kinect_number = 0;
-colorS = strcat('/kinect1/', 'imgColor');
-%depthS = strcat('/kinect1/', 'imgDepth');
+camera_number = 0;
+colorS = strcat('/camera1/', 'imgColor');
+%depthS = strcat('/camera1/', 'imgDepth');
 colorMsgs = rosmessage('sensor_msgs/Image');
 %depthMsgs = rosmessage('sensor_msgs/Image');
 imgColorSub = rossubscriber(colorS,'sensor_msgs/Image',{@colorImageCollectionCallback,1});
@@ -44,15 +44,15 @@ pause(3);
 
 %Now that the Kinect is setup, take a shot and show where all the circles
 %found are
-kinect_number = 1;
+camera_number = 1;
 imgColor = readImage(colorMsgs);
 %imgDepth = readImage(depthMsgs);
-kinect_number = 0;
+camera_number = 0;
 
 % cont = input('Clear Kinect view and press enter to continue.');
 % TODO: FIGURE OUT THE VALUES!!!!
 mm_per_pixel = 2.5; %5.663295322; % mm in one pixel at ground level
-camDistToFloor = 3058; % in mm, as measured with Kinect
+camDistToFloor = 2700; % in mm, as measured with Kinect
 
 type = MINIDRONE;
 while true
@@ -77,6 +77,9 @@ if num_depths > 20 || num_depths < 1
     num_depth = 1;
 end
 
+iDepths = input('What are the depths that you measured in mm? [input as list separated by commas or spaces] ', 's');
+avg_depths = str2num(iDepths)';
+
 num_reads = input('Enter the number of measurements to take at each depth (default is 5): ');
 if num_reads < 1
     num_reads = 1;
@@ -91,7 +94,7 @@ cont = input('Place robot on the ground under the Kinect and press enter to cont
 for i = 1:num_depths
     % This range is big enough to pick up any robot and it should be reset
     % at each level just in case
-    rmin = 20;
+    rmin = 40;
     rmax = 80;
     
     % Find the robot for the first time
@@ -103,11 +106,13 @@ for i = 1:num_depths
             rmax = rmax - 1;
         elseif cont == 4
             rmax = rmax + 1;
+        elseif cont == 5
+            rmin = rmin - 1;
         end
-        kinect_number = 1;
+        camera_number = 1;
         imgColor = readImage(colorMsgs);
         %imgDepth = readImage(depthMsgs);
-        kinect_number = 0;
+        camera_number = 0;
         
         % Find all of the circle in the frame
         [centers, radii, metrics] = imfindcircles(imgColor, [rmin,rmax], ...
@@ -127,17 +132,15 @@ for i = 1:num_depths
     % Calculate the bounded box for the robot at this level. It shouldn't
     % change because the robot shouldn't be moving.
     BBox = getBBox(mean(centers,1), mean(radii), type, BBoxFactor);
-    s = spfrintf('What is the current depth that you measured in mm? ');
-    avg_depths(i) = input(s);
     for j = 1:num_reads
-        kinect_number = 1;
+        camera_number = 1;
         imgColor = readImage(colorMsgs);
         %imgDepth = readImage(depthMsgs);
-        kinect_number = 0;
+        camera_number = 0;
         
-%         % Clip the frame to observe only the area around the robot
+        % Clip the frame to observe only the area around the robot
 %         depthFrame = getPixelsInDepthBB(imgDepth, BBox);
-%         frame = getPixelsInColorBB(imgColor, BBox);
+        frame = getPixelsInColorBB(imgColor, BBox);
 %         
 %         % Determine the depth of the robot and record it
 %         measured_depths(i,j) = findDepth(depthFrame);
@@ -167,9 +170,9 @@ avg_radii = mean(measured_radii,2);
 if num_depths > 1
     for i = 2:num_depths
         s = sprintf('poly%i',i-1);
-        f = fit(avg_depths, avg_radii, s);
+        f = fit(avg_radii, avg_depths, s);
         figure;
-        plot(f, avg_depths, avg_radii);
+        plot(f, avg_radii, avg_depths);
         title(s);
     end
     
@@ -178,7 +181,7 @@ if num_depths > 1
     q = sprintf('Enter the number of the prefered polynomial for the coefficients [1 - %i]: ', i-1);
     choice = input(q);
     s = sprintf('poly%i',choice);
-    f = fit(avg_depths, avg_radii, s);
+    f = fit(avg_radii, avg_depths, s);
     f
 else
     % If the number of depths measured is not greater than 1, then a

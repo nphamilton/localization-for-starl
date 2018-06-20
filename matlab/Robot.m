@@ -6,6 +6,7 @@ classdef Robot
     
     properties
         center
+        centers = [];
         radius
         radii = [];
         X
@@ -17,6 +18,7 @@ classdef Robot
         yaw
         yaws = [];
         depth
+        depths = [];
         BBox
         BBoxes = [];
         BBoxTight % BBox with BBox factor of 1

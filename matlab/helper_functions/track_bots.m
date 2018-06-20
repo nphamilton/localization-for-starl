@@ -10,6 +10,7 @@ indeces = str2num(char(botList));
 
 %% For each index, track the corresponding bot in botArray
 for i = indeces
+%     disp('looking for a bot')
     trackBots(imgColor, i, cameraNum);
 end
 

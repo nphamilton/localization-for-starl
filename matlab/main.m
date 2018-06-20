@@ -61,13 +61,13 @@ send_launch = 0;
 %% Define values for the settings variables. THESE CAN BE CHANGED
 BBoxFactor = 1.7; % intentionally large because it is used for searching for drones not found in previous locations
 hysteresis = 10;
-camDistToFloor = 3058; % in mm, as measured with Camera
+camDistToFloor = 2700; % in mm, as measured with Camera
 mm_per_pixel = 2.5; % mm in one pixel at ground level
 IP = '10.255.24.255';
 num_frames = 10000;
-USE_SERVER = 1; %Enable/disable the network server
-USE_WPT = 1;    %Enable/disable loading waypoints and walls
-USE_HISTORY = 1;%Enable/disable history
+USE_SERVER = 1;  % Enable/disable the network server
+USE_WPT = 1;     % Enable/disable loading waypoints and walls
+USE_HISTORY = 1; % Enable/disable history
 BOTLIST_FILENAME = 'robot_list.txt';
 
 % Grid size and spacing parameters
@@ -123,7 +123,7 @@ for i = 1:numCameras
     colorMsgs = [colorMsgs rosmessage('sensor_msgs/Image')];
     imgColorSubs(i) = rossubscriber(colorS,'sensor_msgs/Image',{@colorImageCollectionCallback,i});
 end
-pause(1);
+pause(3);
 
 %% Display keyboard shortcuts
 disp('L - Launch robots');
@@ -139,18 +139,19 @@ disp('Q - Track shutdown');
 for i = 1:numCameras
     find_robots(bot_lists(i),i); 
 end
-disp('I founded all dem bots')
+% disp('I founded all dem bots')
 %% Track the robots and display their position in the figure
 frameCount = 0;
+tic;
 while true
     frameCount = frameCount + 1;
     
     % Read all of the Camera images
-    imgColor = read_all_camera_images();
-    disp('I done read all the images')
+    imgColor = read_all_camera_images(numCameras);
+%     disp('I done read all the images')
     % Find the robots in each image
     for i = 1:numCameras
-        track_bots(bot_lists(i),i, imgColor(i));
+        track_bots(i, bot_lists(i), imgColor(:,:,:,i));
     end
     
     % Check each robot's location information for boundary crossing
@@ -159,7 +160,7 @@ while true
     % Try to find the bots that crossed boundaries or were not found
     for i = 1:numCameras
         if strcmp(incomingList(i),'') == 0
-            check_incoming(incomingList(i), i, imgColor(i));
+            check_incoming(incomingList(i), i, imgColor(:,:,:,i));
         end
     end
     

@@ -81,7 +81,7 @@ while ischar(nextline)
             % Otherwise the line is for declaring a robot
             C = textscan(nextline,'%s %s %s');
             %assign the info to the appropriate spot in bots
-            bots(botNum).name = string(C{1});                                        %THIS LINE HAS PROBLEMS!!!!
+            bots(botNum).name = string(C{1});
             bots(botNum).type = type_name2num(C{2});
             bots(botNum).color = string(C{3});
             bots(botNum).cameraNum = cameraNum;

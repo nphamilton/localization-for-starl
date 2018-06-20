@@ -14,7 +14,7 @@ global BBoxFactor
 global camera_locations
 
 %% Get pixels in bounding box of bot
-frame = getPixelsInBB(imgColor, bots(index).BBox);
+frame = getPixelsInColorBB(imgColor, bots(index).BBox);
 
 %% Define some variables that will be used later
 centers = [];
@@ -29,6 +29,11 @@ if bots(index).type == MINIDRONE
     % find circles
     [centers, radii, metrics] = imfindcircles(frame, [rmin,rmax], ...
         'ObjectPolarity', 'dark', 'Sensitivity', 0.92);
+    figure(2);
+    image(frame);
+    hold on
+    viscircles(centers, radii);
+    hold off
 elseif bots(index).type == CREATE2
     rmin = 25;
     rmax = 35;
@@ -102,7 +107,7 @@ end
 [~, indexCircle] = max(metrics);
 
 %% Make sure the color matches what it should be
-color = getColor(frame, centers(indexCircle,1));
+color = getColor(frame, centers(indexCircle,:));
 if color ~= bots(index).color
     % If the color is wrong, then the bot wasn't found
     [bots(index).color, ' bot not found due to color mismatch']

@@ -10,7 +10,7 @@ global bot_lists
 factor = 3.0;
 
 %% Parse the incoming list
-botList = str2num(incomingList);
+botList = str2num(char(incomingList));
 
 %% Search the image for incomming robots and update lists
 for i = botList
@@ -21,8 +21,8 @@ for i = botList
     
     % Capture a space around the robot and search it for the specified
     % robot
-    bots(robotNums(i)).BBox = getBBox(center, radius, bots(robotNums(i)).type, factor);
-    trackBots(imgColor, robotNums(i), cameraNum);
+    bots(i).BBox = getBBox(center, radius, bots(i).type, factor);
+    trackBots(imgColor, i, cameraNum);
     
     % If the robot was found, then the corresponding bot_lists need to be
     % updated

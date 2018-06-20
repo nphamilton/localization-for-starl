@@ -42,8 +42,9 @@ end
 if origin == 1
     axis([0 X_MAX 0 Y_MAX]);
 else
-    axis([-320*mm_per_pixel 320*mm_per_pixel -240*mm_per_pixel, mm_per_pixel*240]);
+    axis([-960*mm_per_pixel 960*mm_per_pixel -540*mm_per_pixel, mm_per_pixel*540]); %THIS NEEDS TO BE FIXED!!!!
 end
 drawnow
+end
 
     

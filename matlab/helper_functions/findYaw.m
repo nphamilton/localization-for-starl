@@ -9,13 +9,15 @@ global MAVICPRO
 global PHANTOM3
 global PHANTOM4
 
+[sizeX, sizeY, sizeZ] = size(imgColor);
+
 % if type is ardrone, use a tight bounding box since blacking out pixels
 % doesn't work with drone made up of four circles
 if type == ARDRONE || type == GHOST2
     BBox = getBBoxTight(center, radius, type);
 end
 % take only pixels in bounding box
-frame = getPixelsInBB(imgColor, BBox);
+frame = getPixelsInColorBB(imgColor, BBox);
 
 if type == MINIDRONE || type == CREATE2 
     % black out pixels that aren't contained in bot's circle
@@ -23,12 +25,12 @@ if type == MINIDRONE || type == CREATE2
     % close
  
     % make matrices with with x and y coordinates as values
-    x = (1:640);
-    X = repmat(x,480,1);
-    X = getPixelsInBB(X, BBox);
-    y = (1:480)';
-    Y = repmat(y,1,640);
-    Y = getPixelsInBB(Y, BBox);
+    x = (1:sizeY);
+    X = repmat(x,sizeX,1);
+    X = getPixelsInColorBB(X, BBox);
+    y = (1:sizeX)';
+    Y = repmat(y,1,sizeY);
+    Y = getPixelsInColorBB(Y, BBox);
     % make a matrix with with 1's inside circle, 0's outside
     imgfilt = (X - center(1,1)).^2 + (Y - center(1,2)).^2 <= radius^2;
     % make the matrix NxNx3
