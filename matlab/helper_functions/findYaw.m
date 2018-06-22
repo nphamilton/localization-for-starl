@@ -88,7 +88,8 @@ if ~isempty(mag_props) && ~isempty(yel_props)
         B = [0,1];
     end
     
-    angle = rad2deg(angleBtwVectors(A,B));    
+    angle = rad2deg(angleBtwVectors(A,B));
+    
 %     figure(2);
 %     imshow(frame)
 %     hold on

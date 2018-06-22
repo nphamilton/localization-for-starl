@@ -164,8 +164,8 @@ while true
         end
     end
     
-    % Update the figure every 4 times
-    if rem(frameCount,4) == 1
+    % Update the figure every 2 times
+    if rem(frameCount,2) == 1
         plot_bots(fig, LINE_LEN, X_MAX, Y_MAX, bots, waypoints, walls,...
             disp_waypoints, disp_waypoint_names)
     end

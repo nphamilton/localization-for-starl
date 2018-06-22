@@ -9,10 +9,10 @@ function [botID_list, cameraID_list, waypoint_filename] = parse_input(fileName)
 %
 % WAYPOINT_FILE_NAME
 % numBots numCameras
-% Camera 1 X Y
+% Camera 1 X Y Orientation
 % botName type color
 % botName type color
-% Camera 2 X Y
+% Camera 2 X Y Orientation
 % botName type color
 % .
 % .

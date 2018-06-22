@@ -1,4 +1,4 @@
-function [rmin, rmax] = findRadiusRange(BBoxWidth, type)
+function [rmin, rmax] = findRadiusRange(BBoxWidth, type, BBoxFactor)
 % The purpose of this function is to calculate and return the radius range of the desired type of robot in terms of pixels
 
 global MINIDRONE
@@ -9,7 +9,6 @@ global GHOST2
 global MAVICPRO
 global PHANTOM3
 global PHANTOM4
-global BBoxFactor
 
 % If the drone is a single-circle drone
 if (type == MINIDRONE)

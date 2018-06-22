@@ -8,7 +8,7 @@ function [ incomingList ] = find_crossings(bots)
 %% Globals and variable initializations
 global camera_locations;
 global camDistToFloor;
-numCameras = length(camera_locations);
+global numCameras;
 
 % Reset the incoming lists to start fresh
 incomingList = strings(numCameras,1);
@@ -29,8 +29,8 @@ for i = 1:length(bots)
         closestDist2 = 1000000000;
         closestCamera2 = 0;
         for j = 1:numCameras
-            cameraX = camera_locations(i,1);
-            cameraY = camera_locations(i,2);
+            cameraX = camera_locations(j,1);
+            cameraY = camera_locations(j,2);
             cameraZ = camDistToFloor;
             dist = sqrt((cameraX-x)^2 + (cameraY-y)^2 + (cameraZ-z)^2);
             if dist < closestDist2
@@ -38,10 +38,10 @@ for i = 1:length(bots)
                     closestDist2 = closestDist;
                     closestCamera2 = closestCamera;
                     closestDist = dist;
-                    closestCamera = i;
+                    closestCamera = j;
                 else
                     closestDist2 = dist;
-                    closestCamera2 = i;
+                    closestCamera2 = j;
                 end
             end
         end

@@ -22,11 +22,17 @@ for i = botList
     % Capture a space around the robot and search it for the specified
     % robot
     bots(i).BBox = getBBox(center, radius, bots(i).type, factor);
+    s = sprintf('Attempting to find lost drone %i',i);
+    disp(s)
     trackBots(imgColor, i, cameraNum);
     
     % If the robot was found, then the corresponding bot_lists need to be
     % updated
     if bots(i).hyst == 0
+        figure(3);
+        frame = getPixelsInColorBB(imgColor, bots(i).BBox);
+        image(frame);
+        
         % Remove the number from the previous Camera's list
         bot_lists(prevCameraNum) = strrep(bot_lists(prevCameraNum), ...
             num2str(i), '');

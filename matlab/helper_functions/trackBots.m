@@ -25,7 +25,7 @@ metrics = [];
 %% Determine the radius of the circle that should be looked for and then find the corresponding circles
 if bots(index).type == MINIDRONE
     % calculate rmin and rmax
-    [rmin, rmax] = findRadiusRange(sizeX, MINIDRONE);
+    [rmin, rmax] = findRadiusRange(sizeX, MINIDRONE, BBoxFactor);
     % find circles
     [centers, radii, metrics] = imfindcircles(frame, [rmin,rmax], ...
         'ObjectPolarity', 'dark', 'Sensitivity', 0.92);
@@ -41,7 +41,7 @@ elseif bots(index).type == CREATE2
     [centers, radii, metrics] = imfindcircles(frame, [rmin,rmax], ...
         'ObjectPolarity', 'dark', 'Sensitivity', 0.96);
 elseif bots(index).type == ARDRONE
-    [rmin, rmax] = findRadiusRange(sizeX, ARDRONE);
+    [rmin, rmax] = findRadiusRange(sizeX, ARDRONE, BBoxFactor);
     % find circles
     [centers, radii, metrics] = imfindcircles(frame, [rmin,rmax], ...
         'ObjectPolarity', 'dark', 'Sensitivity', 0.92);
@@ -66,7 +66,7 @@ elseif bots(index).type == ARDRONE
         metrics = 1;
     end
 elseif bots(index).type == GHOST2
-    [rmin, rmax] = findRadiusRange(sizeX, GHOST2);
+    [rmin, rmax] = findRadiusRange(sizeX, GHOST2, BBoxFactor);
     % find circles
     [centers, radii, metrics] = imfindcircles(frame, [rmin,rmax], ...
         'ObjectPolarity', 'dark', 'Sensitivity', 0.92);
@@ -158,8 +158,11 @@ bots(index).cameraNums = [bots(index).cameraNums, cameraNum];
 % Update X, Y, and Z coordinates
 centerMM = getMMCoord(camera_locations(cameraNum,:), bots(index).center, bots(index).radius, bots(index).type);
 bots(index).X = centerMM(1,1);
+bots(index).Xs = [bots(index).Xs; bots(index).X];
 bots(index).Y = centerMM(1,2);
-bots(index).Z = bots(index).depth - camDistToFloor;
+bots(index).Ys = [bots(index).Ys; bots(index).Y];
+bots(index).Z = camDistToFloor - bots(index).depth;
+bots(index).Zs = [bots(index).Zs; bots(index).Z];
 end
 
 

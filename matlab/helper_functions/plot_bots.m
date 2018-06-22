@@ -9,6 +9,7 @@ origin = 2;
 %% Plot the waypoints and robot centers
 clf(fig);
 hold on;
+title('Window')
 
 plot([bots.X], [bots.Y],'ro','MarkerFaceColor','r');
 if n_wpt > 0 && disp_waypoints == 1

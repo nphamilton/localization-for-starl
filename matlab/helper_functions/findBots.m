@@ -223,10 +223,16 @@ if numBots - numCreates > 0
         if length(radii) < numDrones 
             found = false;
             disp('Not enough circles found')
+            figure(4);
+            image(imgColor);
+            hold on
+            viscircles(centers, radii);
+            hold off
+            pause(1)
             return
         end
         
-        figure(2);
+        figure(4);
         image(imgColor);
         hold on
         viscircles(centers, radii);
@@ -271,12 +277,12 @@ if numBots - numCreates > 0
                 bots(i).Z = camDistToFloor;
                 bots(i).yaw = 0;
                 bots(i).hyst = 0;
-                i = i + 1;
+                i = i + 1
             end
             % remove selected circle
             centers_sorted(index,:) = [];
             radii_sorted(index) = [];
-            index = index + 1;
+%             index = index + 1
         end
         % A line useful for debugging displays how many of the drones were
         % found
