@@ -1,4 +1,4 @@
-% central_command_main.m
+% main.m
 %
 % Author: Nathaniel Hamilton
 %  Email: nathaniel.p.hamilton@vanderbilt.edu
@@ -84,7 +84,7 @@ SAVE_TO_FILE = false;
 OUTPUT_FILENAME = 'C:\data.xml';
 
 % image variables should default to the largets resolution available
-imgColorAll = zeros(480,640,3,numCameras,num_frames,'uint8'); % FIX THIS !!!
+imgColorAll = zeros(1080,1920,3,numCameras,num_frames,'uint8'); % FIX THIS !!!
 camera_number = 0;
 
 %% Setup the figure and save file

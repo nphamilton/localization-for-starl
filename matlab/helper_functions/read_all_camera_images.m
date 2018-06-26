@@ -23,7 +23,7 @@ camera_number = 1;
 while camera_number <= numCameras
     % Read the next image
     imgColor(:,:,:,camera_number) = imrotate(readImage(colorMsgs(camera_number)),90*(camera_locations(camera_number,3)-1));
-%     imgColorAll(camera_number,frameCount,:,:,:) = imgColor(camera_number,:,:,:); % THIS NEEDS FIXING!!!!!!!!!!!!!!!!!!!!!!!!!
+    imgColorAll(:,:,:,camera_number,frameCount) = imgColor(:,:,:,camera_number); % THIS NEEDS FIXING!!!!!!!!!!!!!!!!!!!!!!!!!
     % Increase the camera_number so that the next image read is not
     % overwrtitten in its associated callback function
     camera_number = camera_number + 1;

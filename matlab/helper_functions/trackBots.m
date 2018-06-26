@@ -29,11 +29,11 @@ if bots(index).type == MINIDRONE
     % find circles
     [centers, radii, metrics] = imfindcircles(frame, [rmin,rmax], ...
         'ObjectPolarity', 'dark', 'Sensitivity', 0.92);
-    figure(2);
-    image(frame);
-    hold on
-    viscircles(centers, radii);
-    hold off
+%     figure(2);
+%     image(frame);
+%     hold on
+%     viscircles(centers, radii);
+%     hold off
 elseif bots(index).type == CREATE2
     rmin = 25;
     rmax = 35;

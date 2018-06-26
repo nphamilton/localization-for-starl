@@ -223,21 +223,21 @@ if numBots - numCreates > 0
         if length(radii) < numDrones 
             found = false;
             disp('Not enough circles found')
-            figure(4);
-            image(imgColor);
-            hold on
-            viscircles(centers, radii);
-            hold off
-            pause(1)
+%             figure(4);
+%             image(imgColor);
+%             hold on
+%             viscircles(centers, radii);
+%             hold off
+%             pause(1)
             return
         end
         
-        figure(4);
-        image(imgColor);
-        hold on
-        viscircles(centers, radii);
-        hold off
-        pause(1)
+%         figure(4);
+%         image(imgColor);
+%         hold on
+%         viscircles(centers, radii);
+%         hold off
+%         pause(1)
         
         % sort by size, the minidrone circles will be smaller
         [radii_sorted, I] = sort(radii);

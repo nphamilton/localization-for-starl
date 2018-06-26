@@ -29,9 +29,9 @@ for i = botList
     % If the robot was found, then the corresponding bot_lists need to be
     % updated
     if bots(i).hyst == 0
-        figure(3);
-        frame = getPixelsInColorBB(imgColor, bots(i).BBox);
-        image(frame);
+%         figure(3);
+%         frame = getPixelsInColorBB(imgColor, bots(i).BBox);
+%         image(frame);
         
         % Remove the number from the previous Camera's list
         bot_lists(prevCameraNum) = strrep(bot_lists(prevCameraNum), ...
