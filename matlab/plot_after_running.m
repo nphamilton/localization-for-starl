@@ -58,6 +58,6 @@ frameData = zeros(max(rowMax),max(columnMax),3,frameCount);
 for frame_num = 1:frameCount
    for camera_num = 1:numCameras
        frameData(rowMin(camera_num):rowMax(camera_num),columnMin(camera_num):columnMax(camera_num),:,frame_num) ...
-           = create_camera_frame(imgColorAll(:,:,:,camera_num,frame_num),frame_num,goal_centers,goal_radii,showCoordinates,videoOnly, showBBox);
+           = create_camera_frame(imgColorAll(:,:,:,camera_num,frame_num),camera_num,frame_num,goal_centers,goal_radii,showCoordinates,videoOnly, showBBox);
    end
 end
