@@ -277,7 +277,7 @@ if numBots - numCreates > 0
                 bots(i).Z = camDistToFloor;
                 bots(i).yaw = 0;
                 bots(i).hyst = 0;
-                i = i + 1
+                i = i + 1;
             end
             % remove selected circle
             centers_sorted(index,:) = [];

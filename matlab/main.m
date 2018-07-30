@@ -64,7 +64,7 @@ hysteresis = 10;
 camDistToFloor = 2700; % in mm, as measured with Camera
 mm_per_pixel = 2.5; % mm in one pixel at ground level
 IP = '10.255.24.255';
-num_frames = 10000;
+num_frames = 500;
 USE_SERVER = 1;  % Enable/disable the network server
 USE_WPT = 1;     % Enable/disable loading waypoints and walls
 USE_HISTORY = 1; % Enable/disable history
@@ -142,30 +142,41 @@ end
 % disp('I founded all dem bots')
 %% Track the robots and display their position in the figure
 frameCount = 0;
-tic;
+t1 = tic;
 while true
     frameCount = frameCount + 1;
     
     % Read all of the Camera images
+%     t2 = tic;
     imgColor = read_all_camera_images(numCameras);
+%     fprintf('Reading all images took %f\n',toc(t2));
 %     disp('I done read all the images')
+
     % Find the robots in each image
+%     t3 = tic;
     for i = 1:numCameras
         track_bots(i, bot_lists(i), imgColor(:,:,:,i));
     end
+%     fprintf('Tracking all bots took %f\n',toc(t3));
     
     % Check each robot's location information for boundary crossing
+%     t4 = tic;
     incomingList = find_crossings(bots);
+%     fprintf('Determining crossings took %f\n',toc(t4));
     
     % Try to find the bots that crossed boundaries or were not found
+%     t5 = tic;
     for i = 1:numCameras
         if strcmp(incomingList(i),'') == 0
             check_incoming(incomingList(i), i, imgColor(:,:,:,i));
         end
     end
+%     fprintf('Locating lost bots took %f\n',toc(t5));
     
     % Update the figure every 2 times
     if rem(frameCount,2) == 1
+        frameRate = (frameCount/toc(t1));
+        fprintf('Frames per second: %d\n',frameRate);
         plot_bots(fig, LINE_LEN, X_MAX, Y_MAX, bots, waypoints, walls,...
             disp_waypoints, disp_waypoint_names)
     end

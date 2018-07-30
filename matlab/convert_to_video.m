@@ -12,6 +12,7 @@ global frameCount
 
 %% Open the video writer
 vw = VideoWriter(fileName);
+vw.FrameRate = frameRate;
 open(vw);
 
 %% Write each frame into the video

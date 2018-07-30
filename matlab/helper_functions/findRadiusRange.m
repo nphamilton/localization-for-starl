@@ -16,14 +16,14 @@ if (type == MINIDRONE)
     % shouldn't be smaller than half the last recorded value
     maxRadius = ceil(BBoxWidth/2);
     lastRadius = floor(maxRadius/BBoxFactor);
-    minRadius = round(lastRadius/2);
+    minRadius = round(lastRadius*(2/3));
     
     rmin = minRadius;
     rmax = maxRadius;
 
 % If the drone is a 4-circle drone
 elseif ((type == ARDRONE) || (type == GHOST2))
-	% The maximum radius cannot be larger than 1/4 tge width and shouldn't 
+	% The maximum radius cannot be larger than 1/4 the width and shouldn't 
     % be smaller than half the last recorded value 
     maxRadius = ceil(BBoxWidth/4);
     lastRadius = floor(maxRadius/BBoxFactor);

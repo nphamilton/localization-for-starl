@@ -55,7 +55,7 @@ end
 
 
 %% Output the result
-f = getframe;
+f = getframe();
 plotted_frame = f.cdata;
 
 end

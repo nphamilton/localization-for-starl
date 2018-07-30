@@ -39,25 +39,35 @@ goal_radii = 0;
 %% Determine where the camera's images should be positioned in the big picture
 % Figure out how to do this without
 % hardcoding!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+I = create_camera_frame(imgColorAll(:,:,:,1,1),1,1,goal_centers,goal_radii,showCoordinates,videoOnly, showBBox);
+[numRows, numCols, ~] = size(I);
 % The first camera's bounds
-rowMin(1) = 1;
-rowMax(1) = 1080;
-columnMin(1) = 1;
-columnMax(1) = 1920;
+rowMin(2) = 1;
+rowMax(2) = numRows;
+columnMin(2) = 1;
+columnMax(2) = numCols;
 % The second camera's bounds
-rowMin(2) = 1081;
-rowMax(2) = 1080*2;
-columnMin(2) = 1921;
-columnMax(2) = 1920*2;
+rowMin(1) = numRows+1;
+rowMax(1) = numRows*2;
+columnMin(1) = 1;
+columnMax(1) = numCols;
 
 %% Create the big picture
 % Preallocate the space
-frameData = zeros(max(rowMax),max(columnMax),3,frameCount);
+frameData = zeros(max(rowMax),max(columnMax),3,frameCount,'uint8');
 
 % Go frame by frame and camera by camera
 for frame_num = 1:frameCount
    for camera_num = 1:numCameras
+%        figure(2);
+       I = create_camera_frame(imgColorAll(:,:,:,camera_num,frame_num),camera_num,frame_num,goal_centers,goal_radii,showCoordinates,videoOnly, showBBox);
+%        imshow(I);
+%        pause();
        frameData(rowMin(camera_num):rowMax(camera_num),columnMin(camera_num):columnMax(camera_num),:,frame_num) ...
-           = create_camera_frame(imgColorAll(:,:,:,camera_num,frame_num),camera_num,frame_num,goal_centers,goal_radii,showCoordinates,videoOnly, showBBox);
+           = I;
    end
+%    figure(3);
+%    p = frameData(:,:,:,frame_num);
+%    imshow(p);
+%    pause();
 end
